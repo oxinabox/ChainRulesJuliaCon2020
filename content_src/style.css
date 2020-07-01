@@ -1,0 +1,88 @@
+/* Lora used for body */
+@font-face{
+  font-family: 'Lora';
+  src: url('fonts/Lora/Lora-Regular.ttf');
+}
+@font-face{
+  font-family: 'Lora';
+  src: url('fonts/Lora/Lora-Bold.ttf');
+  font-weight: bold;
+}
+@font-face{
+  font-family: 'Lora';
+  src: url('fonts/Lora/Lora-Italic.ttf');
+  font-style: italic;
+}
+@font-face{
+  font-family: 'Lora';
+  src: url('fonts/Lora/Lora-BoldItalic.ttf');
+  font-weight: bold;
+  font-style: italic;
+}
+
+/* Yanone Kaffeesatz used for h1, h2, h3 */
+@font-face{
+  font-family: 'Yanone Kaffeesatz';
+  src: url('fonts/Yanone_Kaffeesatz/YanoneKaffeesatz-Regular.ttf');
+}
+@font-face{
+  font-family: 'Yanone_Kaffeesatz';
+  src: url('fonts/Yanone_Kaffeesatz/YanoneKaffeesatz-Bold.ttf');
+  font-weight: bold;
+}
+
+/* Ubuntu Mono used for code, do we need Italic for code ? */
+@font-face{
+  font-family: 'Ubuntu Mono';
+  src: url('fonts/Ubuntu_Mono/UbuntuMono-Regular.ttf');
+}
+@font-face{
+  font-family: 'Ubuntu Mono';
+  src: url('fonts/Ubuntu_Mono/UbuntuMono-Bold.ttf');
+  font-weight: bold;
+}
+@font-face{
+  font-family: 'Ubuntu Mono';
+  src: url('fonts/Ubuntu_Mono/UbuntuMono-Italic.ttf');
+  font-style: italic;
+}
+@font-face{
+  font-family: 'Ubuntu Mono';
+  src: url('fonts/Ubuntu_Mono/UbuntuMono-BoldItalic.ttf');
+  font-weight: bold;
+  font-style: italic;
+}
+
+body { font-family: 'Lora'; }
+h1, h2, h3 {
+  font-family: 'Yanone Kaffeesatz';
+  font-weight: normal;
+}
+.remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+/* My additions */
+.row {
+  display: flex;
+}
+.col {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+img,svg{
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.image-90 img {width: 90%;}
+.image-80 img {width: 80%;}
+.image-70 img {width: 70%;}
+.image-60 img {width: 60%;}
+.image-50 img {width: 50%;}
+.image-40 img {width: 40%;}
+.image-30 img {width: 30%;}
+.image-20 img {width: 10%;}
+.image-10 img {width: 10%;}
+
