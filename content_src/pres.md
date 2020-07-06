@@ -170,3 +170,116 @@ ZygoteRules is a effectively deprecated, and all new rules should be written usi
  - ChainRulesCore is a bit less macro-magic
  - You can't realy on Zygote being loaded when writing a chainrule, but you can when writing a ZygoteRule.
  - A macro is planned to allow the easy port of existing ZygoteRules to ChainRules
+
+---
+
+# What is a pullback?
+
+---
+
+# What is an `rrule` ?
+
+---
+
+# What is a pushforward ?
+
+---
+
+# What is a `frule`? 
+
+---
+
+# How does Forward Mode AD work?
+
+Forward-mode AD means replacing every function with a function that calculates the primal result and pushesforward the derivative.
+
+--
+
+How do we get such a function?
+Either we have a `frule` giving us one,
+or we open up the function and replace every function inside it with such a propagating function.
+
+
+---
+
+### Lets do AD by hand: forward-mode
+```@setup hand
+using ChainRules, ChainRulesCore
+```
+
+```@example hand
+function foo(x)
+    a = sin(x)
+    b = 0.2 + a
+    c = asin(b)
+    return c
+end
+```
+
+```@repl hand
+x = π/4;
+ẋ = 1;  # ∂x/∂x
+
+a, ȧ = frule((NO_FIELDS, ẋ), sin, x)  # ∂a/∂x
+b, ḃ = frule((NO_FIELDS, Zero(), ȧ), +, 0.2, a)  # ∂b/∂x = ∂b/∂a⋅∂a/∂x
+
+c, ċ = frule((NO_FIELDS, ḃ), asin, b)  # ∂c/∂x = ∂c/∂b⋅∂b/∂x = ∂f/∂x
+ċ
+```
+
+---
+
+
+# How does Reverse Mode AD work?
+
+Reverse-mode AD means replacing every function with a function that calculates the primal result and stores the pullback onto a tape, which it then composes backwards at the end to pull all the way back.
+
+--
+
+How do we get such a function that tells us the pullback?
+Either we have a `rrule` giving us one,
+or we open up the function and replace every function inside it with such a propagating function.
+
+
+---
+
+### Lets do AD by hand: reverse-mode
+
+```@example hand
+function foo(x)
+    a = sin(x)
+    b = 0.2 + a
+    c = asin(b)
+    return c
+end
+```
+
+First the forward pass, recording pullbacks onto the tape
+```@repl hand
+x = π/4
+a, a_pullback = rrule(sin, x)
+b, b_pullback = rrule(+, 0.2, a)
+c, c_pullback = rrule(asin, b)
+```
+
+---
+
+
+### Lets do AD by hand: reverse-mode
+
+```@example hand
+function foo(x)
+    a = sin(x)
+    b = 0.2 + a
+    c = asin(b)
+    return c
+end
+```
+Then the backward pass calculating gradients
+```@repl hand
+c̄ = 1;  # ∂c/∂c
+_, b̄ = c_pullback(c̄)     # ∂c/∂b
+_, _, ā = b_pullback(b̄)  # ∂c/∂a
+_, x̄ = a_pullback(ā)     # ∂c/∂x = ∂f/∂x
+x̄
+```
