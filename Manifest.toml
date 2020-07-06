@@ -122,9 +122,9 @@ version = "0.8.2"
 
 [[Documenter]]
 deps = ["Base64", "Dates", "DocStringExtensions", "InteractiveUtils", "JSON", "LibGit2", "Logging", "Markdown", "REPL", "Test", "Unicode"]
-git-tree-sha1 = "395fa1554c69735802bba37d9e7d9586fd44326c"
+git-tree-sha1 = "f3464968c65fc78846dad1c038c474a2c39bbb23"
 uuid = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
-version = "0.24.11"
+version = "0.25.0"
 
 [[DocumenterMarkdown]]
 deps = ["Documenter", "Test"]
@@ -284,9 +284,9 @@ version = "1.0.2"
 
 [[MbedTLS_jll]]
 deps = ["Libdl", "Pkg"]
-git-tree-sha1 = "f85473aeb7a2561a5c58c06c4868971ebe2bcbff"
+git-tree-sha1 = "a0cb0d489819fa7ea5f9fa84c7e7eba19d8073af"
 uuid = "c8ffd9c3-330d-5841-b78e-0817d7145fa1"
-version = "2.16.6+0"
+version = "2.16.6+1"
 
 [[Measures]]
 git-tree-sha1 = "e498ddeee6f9fdb4551ce855a46f54dbd900245f"
@@ -342,9 +342,9 @@ uuid = "91d4177d-7536-5919-b921-800302f37372"
 version = "1.3.1+1"
 
 [[OrderedCollections]]
-git-tree-sha1 = "12ce190210d278e12644bcadf5b21cbdcf225cd3"
+git-tree-sha1 = "293b70ac1780f9584c89268a6e2a560d938a7065"
 uuid = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
-version = "1.2.0"
+version = "1.3.0"
 
 [[Parsers]]
 deps = ["Dates", "Test"]
@@ -410,9 +410,11 @@ version = "0.2.0"
 
 [[Remark]]
 deps = ["BinaryProvider", "DefaultApplication", "Documenter", "DocumenterMarkdown", "JSON", "Literate", "Random"]
-git-tree-sha1 = "5707eb315a57d3226f998d6f5c02d9fc86c8d6cd"
+git-tree-sha1 = "690f38516dd69ccfbaf707eeb8e79f2e83ebbbd7"
+repo-rev = "master"
+repo-url = "https://github.com/piever/Remark.jl.git"
 uuid = "79b45036-8e38-5d04-8f49-b9fb23ff5a0d"
-version = "0.2.0"
+version = "0.2.1"
 
 [[Requires]]
 deps = ["UUIDs"]
