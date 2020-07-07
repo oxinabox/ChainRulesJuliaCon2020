@@ -187,6 +187,8 @@ ZygoteRules is a effectively deprecated, and all new rules should be written usi
 
 # What is a `frule`? 
 
+.unfunfact[You can't fuse rrules/pullbacks, because you need the gradient of the step that comes after. Which in turn needs the primal output of this step.]
+
 ---
 
 # How does Forward Mode AD work?
@@ -209,10 +211,10 @@ using ChainRules, ChainRulesCore
 
 ```@example hand
 function foo(x)
-    a = sin(x)
-    b = 0.2 + a
-    c = asin(b)
-    return c
+    u = sin(x)
+    v = 0.2 + u
+    w = asin(v)
+    return w
 end
 ```
 
@@ -220,11 +222,11 @@ end
 x = π/4;
 ẋ = 1;  # ∂x/∂x
 
-a, ȧ = frule((NO_FIELDS, ẋ), sin, x)  # ∂a/∂x
-b, ḃ = frule((NO_FIELDS, Zero(), ȧ), +, 0.2, a)  # ∂b/∂x = ∂b/∂a⋅∂a/∂x
+u, u̇ = frule((NO_FIELDS, ẋ), sin, x)  # ∂u/∂x
+v, v̇ = frule((NO_FIELDS, Zero(), u̇), +, 0.2, u)  # ∂v/∂x = ∂b/∂a⋅∂a/∂x
 
-c, ċ = frule((NO_FIELDS, ḃ), asin, b)  # ∂c/∂x = ∂c/∂b⋅∂b/∂x = ∂f/∂x
-ċ
+w, ẇ = frule((NO_FIELDS, v̇), asin, v)  # ∂w/∂x = ∂w/∂v⋅∂v/∂x = ∂f/∂x
+ẇ
 ```
 
 ---
@@ -245,21 +247,21 @@ or we open up the function and replace every function inside it with such a prop
 
 ### Lets do AD by hand: reverse-mode
 
-```@example hand
+```julia
 function foo(x)
-    a = sin(x)
-    b = 0.2 + a
-    c = asin(b)
-    return c
+    u = sin(x)
+    v = 0.2 + u
+    w = asin(v)
+    return w
 end
 ```
 
 First the forward pass, recording pullbacks onto the tape
 ```@repl hand
 x = π/4
-a, a_pullback = rrule(sin, x)
-b, b_pullback = rrule(+, 0.2, a)
-c, c_pullback = rrule(asin, b)
+u, u_pullback = rrule(sin, x)
+v, v_pullback = rrule(+, 0.2, u)
+w, w_pullback = rrule(asin, v)
 ```
 
 ---
@@ -267,19 +269,21 @@ c, c_pullback = rrule(asin, b)
 
 ### Lets do AD by hand: reverse-mode
 
-```@example hand
+```julia
 function foo(x)
-    a = sin(x)
-    b = 0.2 + a
-    c = asin(b)
-    return c
+    u = sin(x)
+    v = 0.2 + u
+    w = asin(v)
+    return w
 end
 ```
+
 Then the backward pass calculating gradients
+
 ```@repl hand
-c̄ = 1;  # ∂c/∂c
-_, b̄ = c_pullback(c̄)     # ∂c/∂b
-_, _, ā = b_pullback(b̄)  # ∂c/∂a
-_, x̄ = a_pullback(ā)     # ∂c/∂x = ∂f/∂x
+w̅ = 1;  # ∂w/∂w
+_, v̅ = w_pullback(w̅)     # ∂w/∂v
+_, _, u̅ = v_pullback(v̅)  # ∂w/∂u
+_, x̄ = u_pullback(u̅)     # ∂w/∂x = ∂f/∂x
 x̄
 ```
