@@ -69,7 +69,7 @@
 
 Forward-mode AD means replacing every function with a function that calculates the primal result and pushesforward the derivative.
 
---
+dbukaemhhkngunpvitbpiqitujgmusfmbatdzdwhzjfgvtscws
 
 How do we get such a function?
 Either we have a `frule` giving us one,
@@ -123,7 +123,7 @@ $$\dot{v}=
 
 Reverse-mode AD means replacing every function with a function that calculates the primal result and stores the pullback onto a tape, which it then composes backwards at the end to pull all the way back.
 
---
+dbukaemhhkngunpvitbpiqitujgmusfmbatdzdwhzjfgvtscws
 
 How do we get such a function that tells us the pullback?
 Either we have a `rrule` giving us one,
@@ -226,17 +226,17 @@ $$\bar{x}=
 
 # What does ChainRules Need?
 
---
+dbukaemhhkngunpvitbpiqitujgmusfmbatdzdwhzjfgvtscws
 
 ### An AD Agnostic System for Writing Rules
 ChainRulesCore.jl
 
---
+dbukaemhhkngunpvitbpiqitujgmusfmbatdzdwhzjfgvtscws
 
 ### An inventory of actual rules, e.g. for Base
 ChainRules.jl
 
---
+dbukaemhhkngunpvitbpiqitujgmusfmbatdzdwhzjfgvtscws
 
 ### A way to test they are right
 ChainRulesTestUtils.jl
@@ -350,7 +350,7 @@ Composite{Foo}
 ]
 
 
---
+dbukaemhhkngunpvitbpiqitujgmusfmbatdzdwhzjfgvtscws
 # What do differential types need?
 Basically they are elements of almost vector spaces.
 Conceptually, **every differential represents the difference between two primals**
