@@ -476,12 +476,14 @@ It is too easy to make an AD.
 ---
 
 # ChainRules vs ZygoteRules:
-ZygoteRules is a effectively deprecated, and all new rules should be written using ChainRulesCore
 
  - **ChainRulesCore** and **ZygoteRules** are very similar
  - ChainRules wasn't quite ready when ZygoteRules was created.
  - ChainRules is not Zygote specific, it works with everything.
  - A macro is planned to allow the easy port of existing ZygoteRules to ChainRules
+
+
+### ZygoteRules is effectively deprecated, and all new rules should be written using ChainRulesCore
 
 ---
 
