@@ -302,16 +302,58 @@ A way to express what the rule is
 for a given method: i.e. function + argument types.
 `frule` `rrule`, methods that are upon the type of the function.
 
-# What does a rule need?
-propagate deriviatives.
-Pullback / pushforward.
+---
 
-# What does a pushforward need?
+# What does a rule need?
+It needs to allow us to propagate the derivative information through the function.
+
+It needs to compute the primal result.
+Because this is often needed to compute the derivative.
+E.g. 
+
+$$\dfrac{d\sigma(x)}{dx}=\sigma(x)\cdot(1-\sigma(x))$$
+
+It may need to compute the primal result differently, and capture intermediary state.
 
 ---
 
-# What does a pullback need?
+# What does a `frule` need?
+We know we are going to need to compute the primal; so we need the primal inputs.
 
+What else do we need to allow us to propagate the directional derivative forwards?
+We need that directional derivative being pushedforward.
+
+```julia
+function frule((ṡelf, ȧrgs...), ::typeof(foo), args...; kwargs...)
+    ...
+    return y, ẏ
+end
+```
+
+.funfact[
+We say that the **pushforward is fused into the frule**.
+This is required for efficient custom rules e.g. for ODE solvers.
+]
+
+---
+
+# What does an `rrule` need?
+Primal inputs again, but what else do we need to propagate gradient backwards?
+
+We need the gradient of the function called after this one.
+That's a problem, we don't have that on the forward pass, so we will need to return something to put on the tape for the backwards pass.
+The **pullback**.
+
+```julia
+function rrule(::typeof(foo), args...; kwargs...)
+    y = ... 
+    function foo_pullback(ȳ)
+        ...
+        return s̄elf, ārgs...
+    end
+    return y, foo_pullback
+end
+```
 
 --- 
 
@@ -350,7 +392,8 @@ Composite{Foo}
 ]
 
 
-dbukaemhhkngunpvitbpiqitujgmusfmbatdzdwhzjfgvtscws
+---
+
 # What do differential types need?
 Basically they are elements of almost vector spaces.
 Conceptually, **every differential represents the difference between two primals**
@@ -359,7 +402,11 @@ Conceptually, **every differential represents the difference between two primals
 
 # What do differential types need? `zero`
 
-They need a **zero**, since primals can equal to themselves, and constants exist.
+They need a **zero**.
+
+Since the primals that it is the difference of could be equal.
+
+E.g. when the function being differentiated is a constant.
 
 .funfact[
 There is thus the trival differential. `Zero()`,
@@ -405,9 +452,6 @@ Again, this makes it possible to do gradient based optimization.
 Also it is so easy to define via _limits of addition_ that it seems wrong to not have it.
 
 .funfact[ We are currently thinking about rewriting **FiniteDifferences.jl** to represent differences with differentials, rather than projecting everything to and from a vector. ]
-
----
-
 
 ---
 
@@ -572,12 +616,14 @@ But once we make sure every AD package provides a method following that API, the
 
 We will thus have a easy way to say _use a rule if we have one, or use AD if not_.
 
+---
+
 This means we are not far from being able to provide generic interface for *Optim.jl* etc.
 Where you can either define a `rrule` or it will use AD if one is loaded.
 
 ---
 
-# RuleD Everywhere
+# Rules Everywhere
 
 Just like **TimeZones.jl** depends on **RecipesBase.jl** to make `ZonedDateTimes` plot-able.
 
@@ -589,7 +635,7 @@ The future is more packages doing that.
 ---
 
 # How to get involved
- - Write rules for Base etc in ChainRules
+ - Write rules for Base and StdLibs in ChainRules
  - Write rules for your package with ChainRulesCore
  - Incorporate ChainRules support in to your favourate AD
 
