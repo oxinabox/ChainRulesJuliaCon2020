@@ -203,7 +203,7 @@ $$\bar{x}=
 
 # What does AD Need ?
 
- - Ability to break things down into primative operations that is has **rules** for.
+ - Ability to break things down into primative operations that it has **rules** for.
  - Ability to recompose those rules and the results to get overall derivatives.
  - A collection of those **rules**: ChainRules
 
@@ -515,7 +515,7 @@ It is too easy to make an AD.
 **ChainRules** is the successor to **DiffRules**
 
  - **DiffRules** only handles _scalar rules_
- - Any rule defined in **DiffRules** can be define using the `@scalar_rule` macro in **ChainRules** without change.
+ - Any rule defined in **DiffRules** can be defined using the `@scalar_rule` macro in **ChainRules** without change.
  - **DiffRules** is _not designed_ to have its list of rules extended by other packages. **ChainRulesCore** is.
 
 ---
