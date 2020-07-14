@@ -1,4 +1,4 @@
-# ChainRules
+ # ChainRules
 <br>
 .image-30[![ChainRules](https://camo.githubusercontent.com/c516876cff07da365db715346109a22f490945ef/68747470733a2f2f72617763646e2e6769746861636b2e636f6d2f4a756c6961446966662f436861696e52756c6573436f72652e6a6c2f623062386462663236383037663866366263316133633037336236373230623864393061386364342f646f63732f7372632f6173736574732f6c6f676f2e737667)]
 <br>
@@ -50,7 +50,6 @@
  - Mason Protter
 ]
 .col[&#8203;
- - Kristoffer Carlsson
  - Jeffrey Sarnoff
  - James Bradbury
  - Eric Davies
@@ -69,7 +68,7 @@
 
 Forward-mode AD means replacing every function with a function that calculates the primal result and pushesforward the derivative.
 
-dbukaemhhkngunpvitbpiqitujgmusfmbatdzdwhzjfgvtscws
+fnizkltiburcuizhdwxjxqbkinigkpsleaqvvltczekmtvpqvv
 
 How do we get such a function?
 Either we have a `frule` giving us one,
@@ -106,8 +105,8 @@ v̇
 $$\dot{x}=\textcolor{blue}{\dfrac{\partial x}{\partial x}}$$  <br><br>
 $$\dot{u}=
 \textcolor{green}{\dfrac{\partial u}{\partial x}}
-=\textcolor{blue}{\dfrac{\partial x}{\partial x}}
-\dfrac{\partial u}{\partial x}$$<br><br>
+=\dfrac{\partial u}{\partial x}
+\textcolor{blue}{\dfrac{\partial x}{\partial x}}$$<br><br>
 $$\dot{v}=
 \textcolor{purple}{\dfrac{\partial v}{\partial x}}
 =\dfrac{\partial v}{\partial u} 
@@ -123,7 +122,7 @@ $$\dot{v}=
 
 Reverse-mode AD means replacing every function with a function that calculates the primal result and stores the pullback onto a tape, which it then composes backwards at the end to pull all the way back.
 
-dbukaemhhkngunpvitbpiqitujgmusfmbatdzdwhzjfgvtscws
+fnizkltiburcuizhdwxjxqbkinigkpsleaqvvltczekmtvpqvv
 
 How do we get such a function that tells us the pullback?
 Either we have a `rrule` giving us one,
@@ -166,7 +165,7 @@ Then the backward pass calculating gradients
 
 .row[
 .col[
-
+<br>
 ```@repl hand
 v̅ = 1;
 _, u̅ = v_pullback(v̅)
@@ -178,8 +177,7 @@ x̄
 .col[
 $$\bar{v}=\textcolor{blue}{\dfrac{\partial v}{\partial v}}$$  <br><br>
 $$\bar{u}=\textcolor{green}{\dfrac{\partial v}{\partial u}}
-=\dfrac{\partial v}{\partial u}
-\textcolor{blue}{\dfrac{\partial v}{\partial v}}$$  <br><br>
+=\textcolor{blue}{\dfrac{\partial v}{\partial v}}\dfrac{\partial v}{\partial u}$$<br><br>
 $$\bar{x}=
 \textcolor{purple}{\dfrac{\partial v}{\partial x}}
 =\textcolor{green}{\dfrac{\partial v}{\partial u}}
@@ -226,17 +224,17 @@ $$\bar{x}=
 
 # What does ChainRules Need?
 
-dbukaemhhkngunpvitbpiqitujgmusfmbatdzdwhzjfgvtscws
+fnizkltiburcuizhdwxjxqbkinigkpsleaqvvltczekmtvpqvv
 
 ### An AD Agnostic System for Writing Rules
 ChainRulesCore.jl
 
-dbukaemhhkngunpvitbpiqitujgmusfmbatdzdwhzjfgvtscws
+fnizkltiburcuizhdwxjxqbkinigkpsleaqvvltczekmtvpqvv
 
-### An inventory of actual rules, e.g. for Base
+### An inventory of actual rules for Base and StdLibs
 ChainRules.jl
 
-dbukaemhhkngunpvitbpiqitujgmusfmbatdzdwhzjfgvtscws
+fnizkltiburcuizhdwxjxqbkinigkpsleaqvvltczekmtvpqvv
 
 ### A way to test they are right
 ChainRulesTestUtils.jl
@@ -297,10 +295,15 @@ dep_graph_plot  # hide
 ---
 
 
-# What does ChainRulesCore Need?
-A way to express what the rule is
+# What does ChainRulesCore need?
+
+A way to specify what the rule is
 for a given method: i.e. function + argument types.
-`frule` `rrule`, methods that are upon the type of the function.
+
+This is done by overloading `frule` and `rrule`:
+ - `rrule(::typeof(foo), args...; kwargs...)`
+ - `frule((ṡelf, ȧrgs...), ::typeof(foo), args...; kwargs...)`
+
 
 ---
 
@@ -314,6 +317,7 @@ E.g.
 $$\dfrac{d\sigma(x)}{dx}=\sigma(x)\cdot(1-\sigma(x))$$
 
 It may need to compute the primal result differently, and capture intermediary state.
+Or to just do the combined computation of primal and derivative more effectively.
 
 ---
 
@@ -398,6 +402,11 @@ Composite{Foo}
 Basically they are elements of almost vector spaces.
 Conceptually, **every differential represents the difference between two primals**
 
+.funfact[
+The differential for `DateTime` is `Period` (e.g. `Millisecond`).
+It is my favorite example of a differential for a primal that is *not* a vector space. 
+]
+
 ---
 
 # What do differential types need? `zero`
@@ -430,28 +439,20 @@ An advantage of ChainRule's differentiable types over Zygotes use of `NamedTuple
 
 ---
 
-# What do differential types need? `+` to primal
+# What do differential types need, to be useful for gradient base optimization
 
-They need to be able to be added to a  corresponding **primal** value, to get back another **primal** value.
+Vanilla Gradient Descent: $ x \leftarrow x + 0.1 \tilde x $
 
-Firstly, because this is what it means to be a _difference_.
+So need to be able to **add to primal**, and **multiply by a scalar**
 
-Secondly, because this makes it possible to do gradient based optimization.
+Add to primal is the inverse of it being a difference of primals.
 
-.funfact[
-The differential for `DateTime` is `Period` (e.g. `Millisecond`).
-It is my favorite example of a differential for a primal that is *not* a vector space. 
+Multiply by scalar is natural to define from limits of additions.
+
+.funfact[This is also useful **difference** based (gradient-free) optimization like **particle swarms** and the **Nelder–Mead method**.
+Further, it is planned to switch FiniteDifferences.jl to use differentials, rather than converting to and from vectors.
 ]
 
-
----
-
-# What do differential types need? `*` with scalar
-Again, this makes it possible to do gradient based optimization.
-
-Also it is so easy to define via _limits of addition_ that it seems wrong to not have it.
-
-.funfact[ We are currently thinking about rewriting **FiniteDifferences.jl** to represent differences with differentials, rather than projecting everything to and from a vector. ]
 
 ---
 
@@ -459,7 +460,7 @@ Also it is so easy to define via _limits of addition_ that it seems wrong to not
 <br>
 .row[
 .col[
-# What is out there?
+# How is the world now?
 <br>
 .image-30[![ChainRules](https://camo.githubusercontent.com/c516876cff07da365db715346109a22f490945ef/68747470733a2f2f72617763646e2e6769746861636b2e636f6d2f4a756c6961446966662f436861696e52756c6573436f72652e6a6c2f623062386462663236383037663866366263316133633037336236373230623864393061386364342f646f63732f7372632f6173736574732f6c6f676f2e737667)]
 ]
@@ -586,6 +587,7 @@ Which included such features as Pkg2,  keyword arguments, and suffixing mutating
 ---
 
 ## Calling back into AD
+
 ```julia
 function rrule(::typeof(map), f, x)
     res = map(xi->rrule(f, xi), x)

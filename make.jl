@@ -6,7 +6,8 @@ using Remark: Remark
 function build()
     dir = Remark.slideshow(
         "content_src/pres.md", "out";
-        css="content_src/style.css"    
+        css="content_src/style.css",
+        title="ChainRules"
     )
     cp("content_src/humans", joinpath(dir, "build", "humans"); force=true)
 
