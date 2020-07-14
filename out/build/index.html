@@ -828,31 +828,6 @@ Could hard-code a given AD, but probably you want to keep using the one you are 
 
 
 
-## ChainRules as an interface for AD
-
-
-So we need to provide an interface by which one specifies how to call back into AD from a ChainRule. Probably by providing a method that exactly matches the behavour of `rrule` / `frule`.
-
-
-But once we make sure every AD package provides a method following that API, then that becomes a common API for all AutoDiff.
-
-
-We will thus have a easy way to say *use a rule if we have one, or use AD if not*.
-
-
----
-
-
-This means we are not far from being able to provide generic interface for *Optim.jl* etc. Where you can either define a `rrule` or it will use AD if one is loaded.
-
-
----
-
-
-
-
-
-
 # Rules Everywhere
 
 
