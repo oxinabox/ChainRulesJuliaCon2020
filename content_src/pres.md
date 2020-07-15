@@ -14,6 +14,35 @@
 .image-50[![InveniaLabs](https://www.invenia.ca/wp-content/themes/relish_theme/img/labs-logo.png)]
 ]
 
+
+---
+.image-float[![InveniaLabs](https://www.invenia.ca/wp-content/themes/relish_theme/img/logo.png)]
+# Invenia is hiring
+
+Invenia has over 30
+Developers, Research Software Engineers,
+Machine Learning Reseachers, and Power Systems Researchers working full-time in Julia;
+**and we would like to have more.**
+
+Come join us and contribute to our codebase of over <br> **400,000 lines of Julia code**.
+
+.col[**Also come see our JuliaCon 2020 talks**]
+.row[
+.col[
+ChainRules.jl<br>
+Fast GPs for time series<br>
+HydroPowerModels.jl<br>
+NamedDims.jl<br>
+]
+.col[
+NeuralProcesses.jl<br>
+ScoreDrivenModels.jl<br>
+Fancy Array Indexing BoF<br>
+Julia In Production BoF<br>
+]
+]
+
+
 ---
 
 # Ya Humans
@@ -525,10 +554,10 @@ It is too easy to make an AD.
  - **ChainRulesCore** and **ZygoteRules** are very similar
  - ChainRules wasn't quite ready when ZygoteRules was created.
  - ChainRules is not Zygote specific, it works with everything.
- - A macro is planned to allow the easy port of existing ZygoteRules to ChainRules
 
-
+.col[
 ### ZygoteRules is effectively deprecated, and all new rules should be written using ChainRulesCore
+]
 
 ---
 
@@ -551,7 +580,8 @@ It is too easy to make an AD.
  - Use ChainRule's differential types
      - `nothing` -> `AbstractZero`
      - `NamedTuple` -> `Composite`
-
+<br>
+ - Convenience macro for easy translating of ZygoteRules
 ---
 
 # More Integrations

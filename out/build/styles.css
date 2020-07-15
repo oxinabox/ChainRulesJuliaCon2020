@@ -123,10 +123,7 @@ h1, h2, h3 {
   margin-right: auto;
   text-align: center;
 }
-/*****************************************/
-.antibr{
-  margin-top: -10em;
-}
+
 
 /*****************************************/
 
@@ -175,3 +172,4 @@ img,svg{
 .image-20 img {width: 10%;}
 .image-10 img {width: 10%;}
 
+.image-float {float: right};
