@@ -47,20 +47,20 @@ Julia In Production BoF<br>
 
 # Ya Humans
 .row[
-.image-60[![lyndon](humans/lyndon.png)]
-.image-60[![will](humans/will.png)]
-.image-60[![nick](humans/nick.png)]
-.image-60[![matt](humans/matt.png)]
+.image-60[![lyndon](assets/lyndon.png)]
+.image-60[![will](assets/will.png)]
+.image-60[![nick](assets/nick.png)]
+.image-60[![matt](assets/matt.png)]
 ]
 
 .row[
-.col[.image-50[![jarret](humans/jarret.jpg)] Jarret Revels]
-.col[.image-50[![alex](humans/alex.png)] Alex Arslan]
-.col[.image-50[![seth](humans/seth.jpg)] Seth Axen]
+.col[.image-50[![jarret](assets/jarret.jpg)] Jarret Revels]
+.col[.image-50[![alex](assets/alex.png)] Alex Arslan]
+.col[.image-50[![seth](assets/seth.jpg)] Seth Axen]
 ]
 .row[
-.col[.image-40[![simeon](humans/simeon.png)] Simeon Schaub]
-.col[.image-40[![yingbo](humans/yingbo.png)] Yingbo Ma]
+.col[.image-40[![simeon](assets/simeon.png)] Simeon Schaub]
+.col[.image-40[![yingbo](assets/yingbo.png)] Yingbo Ma]
 ]
 
 ---
@@ -90,6 +90,22 @@ Julia In Production BoF<br>
 ]
 ]
 
+---
+
+# Why AutoDiff?
+
+.row[
+.col[
+.image-90[ ![](assets/grand1.png)]
+.image-90[ ![](assets/grand4.png)]
+]
+.col[
+.image-90[ ![](assets/grand3.png)]
+.image-90[ ![](assets/grand2.png)]
+]
+]
+**JuliaCon 2018 Founder's Keynote -- The Future.**<br>
+Jeff Bezanson, Stefan Karpinski, Viral Shah, Alan Edelman;
 
 ---
 
@@ -232,15 +248,15 @@ $$\bar{x}=
 
 # What does AD Need ?
 
- - Ability to break things down into primative operations that it has **rules** for.
+ - Ability to decompose functions down into primitive operations that it has **rules** for.
  - Ability to recompose those rules and the results to get overall derivatives.
  - A collection of those **rules**: ChainRules
 
 ---
 
 # Why does AD need rules:
- - Fundermentally need rules for the instruction set: `+`, `*`, etc.
- - Insert domain-knowledge about best way to find it. Extreme example: _QuadGK + Fundermental Theorem of Calculus._ it is the identity.
+ - Fundamentally need rules for the instruction set: `+`, `*`, etc.
+ - Insert domain-knowledge about best way to find it. Extreme example: _QuadGK + Fundamental Theorem of Calculus._ it is the identity.
  - Need rules to handle things the AD can't deal with (e.g. Zygotes current lack of mutation support)
 
 .funfact[
@@ -330,23 +346,11 @@ A way to specify what the rule is
 for a given method: i.e. function + argument types.
 
 This is done by overloading `frule` and `rrule`:
- - `rrule(::typeof(foo), args...; kwargs...)`
- - `frule((ṡelf, ȧrgs...), ::typeof(foo), args...; kwargs...)`
 
+`rrule(::typeof(foo), args...; kws...)`
 
----
+`frule((ṡelf, ȧrgs...), ::typeof(foo), args...; kws...)`
 
-# What does a rule need?
-It needs to allow us to propagate the derivative information through the function.
-
-It needs to compute the primal result.
-Because this is often needed to compute the derivative.
-E.g. 
-
-$$\dfrac{d\sigma(x)}{dx}=\sigma(x)\cdot(1-\sigma(x))$$
-
-It may need to compute the primal result differently, and capture intermediary state.
-Or to just do the combined computation of primal and derivative more effectively.
 
 ---
 
@@ -390,7 +394,7 @@ end
 
 --- 
 
-# What do we need to represent the types of the tangents + co-tangents?
+# What do we need to represent the types of derivatives?
 .row[
 .col[
 **Primal** <br>
@@ -428,8 +432,8 @@ Composite{Foo}
 ---
 
 # What do differential types need?
-Basically they are elements of almost vector spaces.
-Conceptually, **every differential represents the difference between two primals**
+Basically they are elements of vector spaces.
+Roughly speaking, **every differential represents the difference between two primals**.
 
 .funfact[
 The differential for `DateTime` is `Period` (e.g. `Millisecond`).
@@ -468,7 +472,7 @@ An advantage of ChainRule's differentiable types over Zygotes use of `NamedTuple
 
 ---
 
-# What do differential types need, to be useful for gradient base optimization
+# What do differential types need, to be useful for gradient based optimization
 
 Vanilla Gradient Descent: $ x \leftarrow x + 0.1 \tilde x $
 
@@ -555,6 +559,8 @@ It is too easy to make an AD.
  - ChainRules wasn't quite ready when ZygoteRules was created.
  - ChainRules is not Zygote specific, it works with everything.
 
+.col[<br> .image-30[ ![](assets/zygote.png) ] ]
+
 .col[
 ### ZygoteRules is effectively deprecated, and all new rules should be written using ChainRulesCore
 ]
@@ -582,21 +588,18 @@ It is too easy to make an AD.
      - `NamedTuple` -> `Composite`
 <br>
  - Convenience macro for easy translating of ZygoteRules
+
+.col[.image-30[ ![](assets/zygote.png) ] ]
+
 ---
 
-# More Integrations
+# Better support for Overloading based AD
 
-## ReverseDiff 🔜
+ - Need to improve support for generating overloads from rules.
+ - Will also solve inference related issues.
 
-Need to improve support for generating overloads from rules.
-Vs using Cassette to directly subsitute.
-Will also solve inference related issues.
-
-## Nabla
-
-Its going to be similar to ReverseDiff.
-We want to retire Nabla, and doing so safely means knowing we have removed all its rules into ChainRules and still pass tests.
-
+### 🔜 ReverseDiff.jl
+### 🔜 Nabla.jl
 
 ---
 

@@ -69,3 +69,18 @@ We will thus have a easy way to say _use a rule if we have one, or use AD if not
 
 This means we are not far from being able to provide generic interface for *Optim.jl* etc.
 Where you can either define a `rrule` or it will use AD if one is loaded.
+
+---
+
+
+# What does a rule need?
+It needs to allow us to propagate the derivative information through the function.
+
+It needs to compute the primal result.
+Because this is often needed to compute the derivative.
+E.g. 
+
+$$\dfrac{d\sigma(x)}{dx}=\sigma(x)\cdot(1-\sigma(x))$$
+
+It may need to compute the primal result differently, and capture intermediary state.
+Or to just do the combined computation of primal and derivative more effectively.

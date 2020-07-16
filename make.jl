@@ -9,8 +9,7 @@ function build()
         css="content_src/style.css",
         title="ChainRules"
     )
-    cp("content_src/humans", joinpath(dir, "build", "humans"); force=true)
-
+    cp("content_src/assets", joinpath(dir, "build", "assets"); force=true)
 end
 
 slideshow_dir = build()
